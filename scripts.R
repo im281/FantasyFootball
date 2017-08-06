@@ -56,6 +56,8 @@ GetProjectedPoints <- function(weekNumber){
   
   #merge NFL and ESPN data
   finalTable <- merge(data, projectedPoints, all=FALSE, by = 'playerId')
+  
+  return (finalTable)
 
 }
 
