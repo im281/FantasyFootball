@@ -85,7 +85,7 @@ RunOptimizerOnProjections <- function(x)
     as.numeric(final$Position == "WR"), # num WR
     as.numeric(final$Position == "TE"), # num TE
     as.numeric(final$Position == "K"),  # num K
-    #as.numeric(final$Position == "DST"),  # num DE
+    as.numeric(final$Position == "DST"),  # num DE
     final$Salary
   )                       # total cost
   direction <- c("==",
@@ -93,15 +93,15 @@ RunOptimizerOnProjections <- function(x)
                  "==",
                  "==",
                  "==",
-                 #"==",
+                 "==",
                  "<=")
   rhs <- c(1, # Quartbacks
            2, # RB Min
            3, # WR Min
            1, # TE Min
            1, # K Max
-           #1, # Defense
-           55500)                # By default, you get 60K to spend, so leave this number alone. but save 5k for a defense
+           1, # Defense
+           60000)                # By default, you get 60K to spend, so leave this number alone. but save 5k for a defense
   
   sol <-
     Rglpk_solve_LP(
@@ -115,4 +115,5 @@ RunOptimizerOnProjections <- function(x)
   
   l <- d[d$V1 != 0]
   View(l)
+  return(l)
 }

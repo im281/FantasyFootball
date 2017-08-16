@@ -1,5 +1,5 @@
 
-GetProjectedPoints <- function(weekNumber){
+GetProjectedPoints <- function(weekNumber,pos){
   
   library(ffanalytics)
   library(data.table)
@@ -29,25 +29,85 @@ GetProjectedPoints <- function(weekNumber){
   )
   
   
-  nfl <- nflPlayerData(season = 2017, weekNo = weekNumber, positions = 'WR')
+  nfl <- nflPlayerData(season = 2017, weekNo = weekNumber, positions = pos)
   
   #gets projections for the given week
-  scrapeData <- runScrape(season = NULL, week = weekNumber, analysts = 18,  c("WR"),
+  scrapeData <- runScrape(season = NULL, week = weekNumber, analysts = 18,  pos,
                           fbgUser = NULL, fbgPwd, updatePlayers = TRUE)
   
+  p <- unlist(attributes(scrapeData))
   
-  espn <- scrapeData[1]$WR@resultData
-  #replace the playerId as character
-  pid <- as.character(scrapeData[1]$WR@resultData$playerId)
-  scrapeData[1]$WR@resultData$playerId <- pid
-  espn <- scrapeData[1]$WR@resultData
+  #loop through all the positions here
+  for (i in 1:6){
+    if(p[i] == "QB"){
+      espnQB <- scrapeData$QB@resultData
+      #replace the playerId as character
+      pid <- as.character(scrapeData$QB@resultData$playerId)
+      scrapeData$QB@resultData$playerId <- pid
+      espnQB <- scrapeData$QB@resultData
+    }
+    if(p[i] == "WR"){
+      espnWR <- scrapeData$WR@resultData
+      #replace the playerId as character
+      pid <- as.character(scrapeData$WR@resultData$playerId)
+      scrapeData$WR@resultData$playerId <- pid
+      espnWR <- scrapeData$WR@resultData
+    }
+    if(p[i] == "DST"){
+      espnDST <- scrapeData$DST@resultData
+      #replace the playerId as character
+      pid <- as.character(scrapeData$DST@resultData$playerId)
+      scrapeData$DST@resultData$playerId <- pid
+      espnDST <- scrapeData$DST@resultData
+    }
+    if(p[i] == "RB"){
+      espnRB <- scrapeData$RB@resultData
+      #replace the playerId as character
+      pid <- as.character(scrapeData$RB@resultData$playerId)
+      scrapeData$RB@resultData$playerId <- pid
+      espnRB <- scrapeData$RB@resultData
+    }
+    if(p[i] == "TE"){
+      espnTE <- scrapeData$TE@resultData
+      #replace the playerId as character
+      pid <- as.character(scrapeData$TE@resultData$playerId)
+      scrapeData$TE@resultData$playerId <- pid
+      espnTE <- scrapeData$TE@resultData
+    }
+    if(p[i] == "K"){
+      espnK <- scrapeData$K@resultData
+      #replace the playerId as character
+      pid <- as.character(scrapeData$K@resultData$playerId)
+      scrapeData$K@resultData$playerId <- pid
+      espnK <- scrapeData$K@resultData
+    }
+  }
   
-  #merge NFL and ESPN data
-  data <- merge(espn, nfl, all=FALSE, by = 'playerId')
+  espnF <- rbind(espnQB,espnWR,espnDST,espnRB,espnTE,espnK,fill = TRUE)
+  
+  
+  
+  # espn <- scrapeData[1]$WR@resultData
+  # #replace the playerId as character
+  # pid <- as.character(scrapeData[1]$WR@resultData$playerId)
+  # scrapeData[1]$WR@resultData$playerId <- pid
+  # espn <- scrapeData[1]$WR@resultData
+  
+  #merge NFL and ESPN data (Not sure why I did this!)
+  data <- espnF#merge(espnF, nfl, all=FALSE, by = 'playerId')
   View(data)
   
   #get projected fantasy points given scoring rules
-  points <- getMeltedData(scrapeData$WR)
+  pointsWR <- getMeltedData(scrapeData$WR)
+  pointsQB <- getMeltedData(scrapeData$QB)
+  pointsRB <- getMeltedData(scrapeData$RB)
+  pointsTE <- getMeltedData(scrapeData$TE)
+  pointsK <- getMeltedData(scrapeData$K)
+  pointsDST <- getMeltedData(scrapeData$DST)
+  
+  points <- rbind(pointsWR,pointsQB,pointsRB,pointsTE,pointsK,pointsDST,fill = TRUE)
+  
+  
   projectedPoints <- calculatePoints(points,scoringRules = scoringRules)
   
   #replace the playerId as character
@@ -60,4 +120,6 @@ GetProjectedPoints <- function(weekNumber){
   return (finalTable)
 
 }
+
+
 
