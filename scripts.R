@@ -32,7 +32,7 @@ GetProjectedPoints <- function(weekNumber,pos){
   nfl <- nflPlayerData(season = 2017, weekNo = weekNumber, positions = pos)
   
   #gets projections for the given week
-  scrapeData <- runScrape(season = NULL, week = weekNumber, analysts = 18,  pos,
+  scrapeData <- runScrape(season = 2017, week = weekNumber, analysts = 18,  pos,
                           fbgUser = NULL, fbgPwd, updatePlayers = TRUE)
   
   p <- unlist(attributes(scrapeData))

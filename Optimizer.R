@@ -85,7 +85,7 @@ RunOptimizerOnProjections <- function(x)
     as.numeric(final$Position == "WR"), # num WR
     as.numeric(final$Position == "TE"), # num TE
     as.numeric(final$Position == "K"),  # num K
-    as.numeric(final$Position == "DST"),  # num DE
+    as.numeric(final$Position == "D"),  # num DE
     final$Salary
   )                       # total cost
   direction <- c("==",
