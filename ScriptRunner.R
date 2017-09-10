@@ -14,7 +14,7 @@ colnames(projections)[16] <- 'PlayerId'
 colnames(def)[16] <- 'PlayerId'
 colnames(def)[2] <- 'Position'
 def$Position <- def$position.y
-colnames(fd)[5] <- 'PlayerId'
+colnames(fd)[4] <- 'PlayerId'
 
 #set primary keys to join tables
 setkey(fd,PlayerId)
