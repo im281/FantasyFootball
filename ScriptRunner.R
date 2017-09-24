@@ -6,7 +6,7 @@ projections <- GetProjectedPoints(1,c("WR","QB","DST","TE","RB","K","DST"))
 def <- projections[which(projections$position.x == "DST")]
 
 #get fanduel data
-fd <- data.table(read.csv("FanDuel-NFL-2017-09-10-20431-players-list.csv"))
+fd <- data.table(read.csv("FanDuel-NFL-2017-09-24-21030-players-list.csv"))
 fd <- fd[which(fd$Injury.Indicator == "")]
 
 #replace column names
@@ -33,6 +33,8 @@ alldata <- rbind(Result,test,fill = TRUE)
 
 #run optimizer to get lineup
 result <- RunOptimizerOnProjections(alldata)
+
+fdresult <- RunOptimizeronFanduelData(fd)
 
 
 
